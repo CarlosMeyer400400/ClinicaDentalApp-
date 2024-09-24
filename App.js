@@ -9,6 +9,8 @@ import Login from './src/screens/Login';
 import Recuperar from './src/screens/Recuperar';
 import Perfil from './src/screens/Perfil';
 import Historial from './src/screens/Historial';
+import Agendar from './src/screens/Agendar';
+import EditarPerfil from './src/screens/Editar Perfil';
 import Icon from 'react-native-vector-icons/FontAwesome'; // Asegúrate de tener esta biblioteca instalada
 
 const Stack = createStackNavigator();
@@ -48,6 +50,9 @@ const App = () => {
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="Recuperar" component={Recuperar} />
         <Stack.Screen name="Main" component={TabNavigator} options={{ headerShown: false }} />
+        <Stack.Screen name="Agendar" component={Agendar} />
+        <Stack.Screen name="Editar Perfil" component={EditarPerfil} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

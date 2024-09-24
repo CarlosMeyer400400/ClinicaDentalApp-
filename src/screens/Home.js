@@ -50,6 +50,9 @@ const Home = ({ navigation }) => {
               style={styles.serviceImage} // Estilos de la imagen
             />
             <Text style={styles.serviceDescription}>{item.descripcion}</Text>
+
+            <Button title="Agendar" onPress={() => navigation.navigate('Agendar')} color="#007BFF" />
+
           </View>
         )}
       />
