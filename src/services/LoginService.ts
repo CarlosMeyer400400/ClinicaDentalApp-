@@ -101,7 +101,6 @@ export const addCita = async (data, id) => {
     throw error;
   }
 };
-//--------------------------------------
 
 // Servicio para obtener todas las citas por ID de usuario
 export const getAllCitasByUserId = async (id) => {
@@ -114,7 +113,6 @@ export const getAllCitasByUserId = async (id) => {
   }
 };
 
-//-------------------------
 // Servicio para obtener una cita específica
 export const getCita = async () => {
   try {

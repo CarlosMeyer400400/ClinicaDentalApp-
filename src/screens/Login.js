@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Alert, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'; 
-import { validarUsuario } from '../services/LoginService'; 
+import Icon from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { validarUsuario } from '../services/LoginService';
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -16,9 +17,14 @@ const Login = ({ navigation }) => {
 
     try {
       const response = await validarUsuario({ email, contrasena });
-      if (response.status === 200) {
-        Alert.alert('Éxito', 'Inicio de sesión correcto');
-        navigation.navigate('Main');
+      
+      console.log(response);
+
+      if (response && response.status === 200) {
+        const token = response.token.toString(); // Convert token to string
+        await AsyncStorage.setItem('token', token); // Store token
+        Alert.alert('Éxito', response.message);
+        navigation.navigate('Main'); // Navigate to main screen after login
       } else {
         Alert.alert('Error', 'Credenciales incorrectas.');
       }
@@ -26,14 +32,6 @@ const Login = ({ navigation }) => {
       Alert.alert('Error', 'Ocurrió un error al intentar iniciar sesión.');
       console.error('Error validando usuario', error);
     }
-  };
-
-  const handleRegister = () => {
-    navigation.navigate('Register');
-  };
-
-  const handleRecoverPassword = () => {
-    navigation.navigate('Recuperar'); // Navegar a la pantalla de recuperación
   };
 
   return (
@@ -61,9 +59,9 @@ const Login = ({ navigation }) => {
           <Icon name={showPassword ? "eye" : "eye-slash"} size={20} />
         </TouchableOpacity>
       </View>
-      
+
       <Text style={styles.label}>¿Olvidaste tu contraseña?</Text>
-      <TouchableOpacity onPress={handleRecoverPassword}>
+      <TouchableOpacity onPress={() => navigation.navigate('Recuperar')}>
         <Text style={[styles.link, { textAlign: 'left' }]}>Recuperar</Text>
       </TouchableOpacity>
 
@@ -72,7 +70,7 @@ const Login = ({ navigation }) => {
       </TouchableOpacity>
 
       <Text style={styles.message}>¿No tienes una cuenta?</Text>
-      <TouchableOpacity onPress={handleRegister}>
+      <TouchableOpacity onPress={() => navigation.navigate('Register')}>
         <Text style={styles.link}>Regístrarse</Text>
       </TouchableOpacity>
     </View>

@@ -1,27 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
-import { getAllCitasByUserId } from '../services/LoginService'; // Ajusta la ruta
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getAllCitasByUserId } from '../services/LoginService'; // Adjust the path as needed
 
 const Historial = () => {
   const [citas, setCitas] = useState([]);
   const [loading, setLoading] = useState(true);
-  
-  const userId = 1; // Ajusta esto para obtener el ID de usuario correctamente
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchCitas = async () => {
       try {
+        const token = await AsyncStorage.getItem('token'); // Fetch the token instead of user data
+        if (!token) {
+          console.log('No token found');
+          setLoading(false);
+          return;
+        }
+
+        const userId = token; // Assuming token is the user ID based on your description
+        console.log('User ID (Token):', userId);
+
         const data = await getAllCitasByUserId(userId);
         setCitas(data);
       } catch (error) {
         console.error('Error fetching citas:', error);
+        setError('Error al cargar las citas.');
       } finally {
         setLoading(false);
       }
     };
 
     fetchCitas();
-  }, [userId]);
+  }, []);
 
   const renderCita = ({ item }) => (
     <View style={styles.citaContainer}>
@@ -29,6 +40,7 @@ const Historial = () => {
       <Text style={styles.citaText}>Hora: {item.hora}</Text>
       <Text style={styles.citaText}>Motivo: {item.motivo}</Text>
       <Text style={styles.citaText}>Dentista: {item.dentista}</Text>
+      <Text style={styles.citaText}>Estado: {item.estado}</Text>
     </View>
   );
 
@@ -36,6 +48,14 @@ const Historial = () => {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.errorText}>{error}</Text>
       </View>
     );
   }
@@ -78,12 +98,17 @@ const styles = StyleSheet.create({
   },
   citaText: {
     fontSize: 16,
-    color: '#333',
+    marginBottom: 4,
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  errorText: {
+    color: 'red',
+    textAlign: 'center',
+    marginTop: 20,
   },
 });
 
