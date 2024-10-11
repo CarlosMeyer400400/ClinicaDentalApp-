@@ -1,12 +1,12 @@
-import 'react-native-gesture-handler';
+import 'react-native-gesture-handler'; 
 import * as React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu'; // Asegúrate de instalar esta biblioteca
-import { StripeProvider } from '@stripe/stripe-react-native'; // Importa StripeProvider
+import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu'; 
+import { StripeProvider } from '@stripe/stripe-react-native'; 
 
 import Home from './src/screens/Home';
 import Register from './src/screens/Register';
@@ -16,7 +16,6 @@ import Perfil from './src/screens/Perfil';
 import Historial from './src/screens/Historial';
 import Agendar from './src/screens/Agendar';
 import EditarPerfil from './src/screens/Editar Perfil';
-
 import QuienesSomos from './src/screens/Quienes Somos';
 import AvisoPrivacidad from './src/screens/Aviso de Privacidad';
 
@@ -42,14 +41,13 @@ const TabNavigator = () => {
         },
       })}
     >
-      <Tab.Screen name="Historial" component={Historial} />
-      <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Perfil" component={Perfil} />
+      <Tab.Screen name="Historial" component={Historial} options={{ headerShown: false }} />
+      <Tab.Screen name="Home" component={Home} options={{ headerShown: false }}/>
+      <Tab.Screen name="Perfil" component={Perfil} options={{ headerShown: false }}/>
     </Tab.Navigator>
   );
 };
 
-// Componente de menú desplegable
 const HeaderMenu = ({ navigation }) => {
   const [visible, setVisible] = React.useState(false);
 
@@ -57,11 +55,12 @@ const HeaderMenu = ({ navigation }) => {
   const hideMenu = () => setVisible(false);
 
   return (
+    <View style={{ marginRight: 25 }}>
     <Menu
       visible={visible}
       anchor={
         <TouchableOpacity onPress={showMenu}>
-          <Icon name="bars" size={25} color="#000" />
+          <Icon name="bars" size={25} color="#ffffff" />
         </TouchableOpacity>
       }
       onRequestClose={hideMenu}
@@ -70,6 +69,7 @@ const HeaderMenu = ({ navigation }) => {
       <MenuItem onPress={() => { hideMenu(); navigation.navigate('AvisoPrivacidad'); }}>Privacidad</MenuItem>
       <MenuDivider />
     </Menu>
+    </View>
   );
 };
 
@@ -78,24 +78,40 @@ const App = () => {
     <StripeProvider publishableKey="pk_live_51Q6pB6DH8ROWHZGsipaA0YAtG48ZdPrv3nr5lGifryHtc9eGwHXljElbSSuByNlCv5NWZN8k4e4r5wn72XqSb9nZ00SKe6czkj">
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Login">
-          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen 
+            name="Login" 
+            component={Login} 
+            options={{ headerShown: false }}
+          />
           <Stack.Screen name="Register" component={Register} />
           <Stack.Screen name="Recuperar" component={Recuperar} />
 
-          {/* Pantalla principal con barra de navegación personalizada */}
           <Stack.Screen
             name="Main"
             component={TabNavigator}
             options={({ navigation }) => ({
               headerLeft: () => (
                 <TouchableOpacity style={{ marginLeft: 15 }} onPress={() => navigation.navigate('Home')}>
-                  <Icon name="home" size={25} color="#000" />
+                  <Image
+                    source={require('./assets/logoblanco.png')} 
+                    style={{ width: 80, height: 80 }} 
+                    resizeMode="contain"
+                  />
                 </TouchableOpacity>
               ),
               headerRight: () => <HeaderMenu navigation={navigation} />,
-              headerTitle: 'Dental Crown',
+              headerTitle: '',
+              headerTitleStyle: {
+                color: '#ffffff', 
+              },
+              headerStyle: {
+                backgroundColor: '#283e51', 
+                elevation: 0,
+                shadowOpacity: 0,
+              },
             })}
           />
+            
 
           <Stack.Screen name="Agendar" component={Agendar} />
           <Stack.Screen name="Editar Perfil" component={EditarPerfil} />
