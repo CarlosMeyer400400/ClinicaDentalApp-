@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu'; // Asegúrate de instalar esta biblioteca
+import { StripeProvider } from '@stripe/stripe-react-native'; // Importa StripeProvider
 
 import Home from './src/screens/Home';
 import Register from './src/screens/Register';
@@ -15,6 +16,7 @@ import Perfil from './src/screens/Perfil';
 import Historial from './src/screens/Historial';
 import Agendar from './src/screens/Agendar';
 import EditarPerfil from './src/screens/Editar Perfil';
+
 import QuienesSomos from './src/screens/Quienes Somos';
 import AvisoPrivacidad from './src/screens/Aviso de Privacidad';
 
@@ -64,8 +66,8 @@ const HeaderMenu = ({ navigation }) => {
       }
       onRequestClose={hideMenu}
     >
-      <MenuItem onPress={() => { hideMenu(); navigation.navigate('Quienes Somos'); }}>Quienes Somos</MenuItem>
-      <MenuItem onPress={() => { hideMenu(); navigation.navigate('Aviso de Privacidad'); }}>Privacidad</MenuItem>
+      <MenuItem onPress={() => { hideMenu(); navigation.navigate('QuienesSomos'); }}>Quienes Somos</MenuItem>
+      <MenuItem onPress={() => { hideMenu(); navigation.navigate('AvisoPrivacidad'); }}>Privacidad</MenuItem>
       <MenuDivider />
     </Menu>
   );
@@ -73,31 +75,35 @@ const HeaderMenu = ({ navigation }) => {
 
 const App = () => {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Register" component={Register} />
-        <Stack.Screen name="Recuperar" component={Recuperar} />
+    <StripeProvider publishableKey="pk_live_51Q6pB6DH8ROWHZGsipaA0YAtG48ZdPrv3nr5lGifryHtc9eGwHXljElbSSuByNlCv5NWZN8k4e4r5wn72XqSb9nZ00SKe6czkj">
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Login">
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Register" component={Register} />
+          <Stack.Screen name="Recuperar" component={Recuperar} />
 
-        {/* Pantalla principal con barra de navegación personalizada */}
-        <Stack.Screen
-          name="Main"
-          component={TabNavigator}
-          options={({ navigation }) => ({
-            headerLeft: () => (
-              <TouchableOpacity style={{ marginLeft: 15 }} onPress={() => navigation.navigate('Home')}>
-                <Icon name="home" size={25} color="#000" />
-              </TouchableOpacity>
-            ),
-            headerRight: () => <HeaderMenu navigation={navigation} />,
-            headerTitle: 'Dental Crown',
-          })}
-        />
+          {/* Pantalla principal con barra de navegación personalizada */}
+          <Stack.Screen
+            name="Main"
+            component={TabNavigator}
+            options={({ navigation }) => ({
+              headerLeft: () => (
+                <TouchableOpacity style={{ marginLeft: 15 }} onPress={() => navigation.navigate('Home')}>
+                  <Icon name="home" size={25} color="#000" />
+                </TouchableOpacity>
+              ),
+              headerRight: () => <HeaderMenu navigation={navigation} />,
+              headerTitle: 'Dental Crown',
+            })}
+          />
 
-        <Stack.Screen name="Agendar" component={Agendar} />
-        <Stack.Screen name="Editar Perfil" component={EditarPerfil} />
-      </Stack.Navigator>
-    </NavigationContainer>
+          <Stack.Screen name="Agendar" component={Agendar} />
+          <Stack.Screen name="Editar Perfil" component={EditarPerfil} />
+          <Stack.Screen name="QuienesSomos" component={QuienesSomos} />
+          <Stack.Screen name="AvisoPrivacidad" component={AvisoPrivacidad} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </StripeProvider>
   );
 };
 
