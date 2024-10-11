@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Button, Alert, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Picker } from '@react-native-picker/picker';
 import { addCita, getServicios } from '../services/LoginService';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { CardField, useStripe } from '@stripe/stripe-react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Agendar = () => {
   const [fecha, setFecha] = useState(new Date());
@@ -13,8 +14,8 @@ const Agendar = () => {
   const [selectedServicio, setSelectedServicio] = useState('');
   const [dentista, setDentista] = useState('');
   const [servicios, setServicios] = useState([]);
-  const { confirmPayment } = useStripe();  // Stripe hook for confirming payments
-  const [cardDetails, setCardDetails] = useState({});  // To store card details
+  const { confirmPayment } = useStripe();
+  const [cardDetails, setCardDetails] = useState({});
 
   useEffect(() => {
     getServicios().then(data => setServicios(data)).catch(error => console.error(error));
@@ -49,7 +50,6 @@ const Agendar = () => {
       const response = await addCita(cita, idByToken);
 
       if (response.status === 200) {
-        // Después de crear la cita, procede con el pago
         handlePayment();
       }
     } catch (error) {
@@ -63,7 +63,7 @@ const Agendar = () => {
       const { paymentIntent, error } = await confirmPayment('CLIENT_SECRET_AQUÍ', {
         type: 'Card',
         billingDetails: {
-          email: 'correo@ejemplo.com', // Aquí puedes usar datos del usuario autenticado
+          email: 'correo@ejemplo.com',
         },
       });
 
@@ -88,7 +88,11 @@ const Agendar = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Agendar Cita</Text>
 
-      <Button title="Seleccionar Fecha" onPress={() => setShowDatePicker(true)} />
+      <TouchableOpacity style={styles.dateButton} onPress={() => setShowDatePicker(true)}>
+        <Icon name="calendar" size={20} color="#ffffff" />
+        <Text style={styles.dateButtonText}>Seleccionar Fecha</Text>
+      </TouchableOpacity>
+
       {showDatePicker && (
         <DateTimePicker
           value={fecha}
@@ -98,9 +102,14 @@ const Agendar = () => {
           minimumDate={new Date()}
         />
       )}
+
       <Text style={styles.selectedDateText}>Fecha seleccionada: {fecha.toISOString().split('T')[0]}</Text>
 
-      <Picker selectedValue={hora} onValueChange={(itemValue) => setHora(itemValue)} style={styles.picker}>
+      <Picker
+        selectedValue={hora}
+        onValueChange={(itemValue) => setHora(itemValue)}
+        style={styles.picker}
+      >
         <Picker.Item label="Seleccione la hora" value="" />
         <Picker.Item label="09:00 AM" value="09:00:00" />
         <Picker.Item label="09:30 AM" value="09:30:00" />
@@ -119,25 +128,29 @@ const Agendar = () => {
         ))}
       </Picker>
 
-      <Picker selectedValue={dentista} onValueChange={(itemValue) => setDentista(itemValue)} style={styles.picker}>
+      <Picker
+        selectedValue={dentista}
+        onValueChange={(itemValue) => setDentista(itemValue)}
+        style={styles.picker}
+      >
         <Picker.Item label="Seleccione un dentista" value="" />
         <Picker.Item label="Juan Perez" value="Juan Perez" />
         <Picker.Item label="Luis Hernandez" value="Luis Hernandez" />
         <Picker.Item label="Steven Univers" value="Steven Univers" />
       </Picker>
 
-      {/* Tarjeta */}
       <CardField
         postalCodeEnabled={true}
-        placeholders={{
-          number: '4242 4242 4242 4242',
-        }}
+        placeholders={{ number: '4242 4242 4242 4242' }}
         cardStyle={styles.card}
         style={styles.cardContainer}
         onCardChange={(cardDetails) => setCardDetails(cardDetails)}
       />
 
-      <Button title="Agendar" onPress={handleAgendar} />
+      <TouchableOpacity style={styles.submitButton} onPress={handleAgendar}>
+        <Icon name="check" size={20} color="#ffffff" />
+        <Text style={styles.submitButtonText}>Agendar</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -146,30 +159,62 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    justifyContent: 'center',
+    backgroundColor: '#f5f5f5',
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
+    color: '#333',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  dateButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#3E5F8A',
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 15,
+  },
+  dateButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    marginLeft: 10,
+    
+  },
+  selectedDateText: {
+    fontSize: 16,
+    color: '#333',
     textAlign: 'center',
     marginBottom: 20,
   },
   picker: {
     height: 50,
     width: '100%',
-    marginBottom: 10,
-  },
-  selectedDateText: {
-    fontSize: 16,
-    textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: 15,
+    backgroundColor: '#f8f8f8',
+    borderRadius: 5,
   },
   cardContainer: {
     height: 50,
-    marginVertical: 30,
+    marginVertical: 20,
   },
   card: {
     backgroundColor: '#efefef',
+  },
+  submitButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#063971',
+    padding: 10,
+    borderRadius: 5,
+  },
+  submitButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    marginLeft: 10,
   },
 });
 
