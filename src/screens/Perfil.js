@@ -1,34 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getDataUser } from '../services/LoginService';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useFocusEffect } from '@react-navigation/native';
 
 const Perfil = ({ navigation }) => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const id = await AsyncStorage.getItem('token');
-        if (id) {
-          const data = await getDataUser(id);
-          setUserData(data);
-        } else {
-          setError('No se encontró el ID del usuario.');
+  useFocusEffect(
+    useCallback(() => {
+      const fetchUserData = async () => {
+        try {
+          setLoading(true);
+          const id = await AsyncStorage.getItem('token');
+          if (id) {
+            const data = await getDataUser(id);
+            setUserData(data);
+          } else {
+            setError('No se encontró el ID del usuario.');
+          }
+        } catch (err) {
+          setError('Error obteniendo los datos del perfil.');
+          console.error(err);
+        } finally {
+          setLoading(false);
         }
-      } catch (err) {
-        setError('Error obteniendo los datos del perfil.');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+      };
 
-    fetchUserData();
-  }, []);
+      fetchUserData();
+    }, [])
+  );
+
 
   if (loading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
