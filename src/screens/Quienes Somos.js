@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
-import { getDataInformacion } from '../services/LoginService'; // Asegúrate de que la ruta sea correcta
+import { getDataInformacion } from '../services/LoginService';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const QuienesSomos = () => {
   const [dataInformacion, setDataInformacion] = useState({
@@ -11,9 +12,7 @@ const QuienesSomos = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulación de ID de información obtenida del token (debería ser reemplazado por el valor real)
-    const idInformacion = '1'; 
-
+    const idInformacion = '1';
     getDataInformacion(idInformacion)
       .then((data) => {
         setDataInformacion(data);
@@ -26,112 +25,109 @@ const QuienesSomos = () => {
   }, []);
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#1367c2" />
+      </View>
+    );
   }
 
   return (
     <FlatList
       ListHeaderComponent={() => (
-        <View style={styles.container}>
-          <Text style={styles.title}>Quiénes Somos</Text>
-          <View style={styles.imageContainer}>
+        <LinearGradient colors={['#c3dafa', '#84b6f4']} style={styles.container}>
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>Quiénes Somos</Text>
             <Image source={require('../assets/somos.jpg')} style={styles.image} />
+            <Text style={styles.cardContent}>{dataInformacion.quienessomos}</Text>
           </View>
-          <Text style={styles.description}>{dataInformacion.quienessomos}</Text>
 
-          <Text style={styles.subTitle}>Misión</Text>
-          <Text style={styles.description}>{dataInformacion.mision}</Text>
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>Misión</Text>
+            <Text style={styles.cardContent}>{dataInformacion.mision}</Text>
+          </View>
 
-          <Text style={styles.subTitle}>Visión</Text>
-          <Text style={styles.description}>{dataInformacion.vision}</Text>
-
-          <Text style={styles.subTitle}>Equipo Médico</Text>
-        </View>
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>Visión</Text>
+            <Text style={styles.cardContent}>{dataInformacion.vision}</Text>
+          </View>
+        </LinearGradient>
       )}
-      data={doctores} // Array de información de doctores
-      keyExtractor={(item) => item.id.toString()}
-      renderItem={({ item }) => (
-        <View style={styles.doctorInfo}>
-          <Image source={item.image} style={styles.doctorImage} />
-          <Text style={styles.doctorName}>{item.name}</Text>
-          <Text style={styles.doctorDescription}>{item.description}</Text>
-        </View>
-      )}
+
     />
   );
 };
 
-const doctores = [
-  {
-    id: 1,
-    name: 'Dr. Nombre 1',
-    description: 'Descripción breve del Dr. Nombre 1.',
-    image: require('../assets/doctora1.jpg'),
-  },
-  {
-    id: 2,
-    name: 'Dr. Nombre 2',
-    description: 'Descripción breve del Dr. Nombre 2.',
-    image: require('../assets/doctor2.jpg'),
-  },
-  {
-    id: 3,
-    name: 'Dr. Nombre 3',
-    description: 'Descripción breve del Dr. Nombre 3.',
-    image: require('../assets/doctora3.jpg'),
-  },
-];
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#ffffff',
+  },
+  card: {
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    padding: 20,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 5,
+    alignItems: 'center',
+  },
+  cardTitle: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#1367c2',
+    marginBottom: 10,
+  },
+  cardContent: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: '#333',
+    textAlign: 'justify',
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 26,
+    fontWeight: '700',
     textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: 10,
+    color: '#283e51',
   },
   subTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginTop: 20,
+    fontSize: 22,
+    fontWeight: '600',
+    marginTop: 25,
+    color: '#1367c2',
   },
   description: {
     fontSize: 16,
-    marginBottom: 20,
+    lineHeight: 24,
     textAlign: 'justify',
+    color: '#333333',
+    marginVertical: 10,
   },
   imageContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
+    marginVertical: 20,
   },
   image: {
-    width: 300,
-    height: 200,
+    width: 280,
+    height: 180,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
   },
-  doctorInfo: {
-    flexDirection: 'column',
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 15,
-  },
-  doctorImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-  },
-  doctorName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginTop: 10,
-  },
-  doctorDescription: {
-    fontSize: 14,
-    textAlign: 'center',
-    marginTop: 5,
   },
 });
 
