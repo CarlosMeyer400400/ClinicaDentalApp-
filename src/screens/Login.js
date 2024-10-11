@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
   loginBox: {
     flex: 1,
     width: '100%',
-    padding: 25,
+    padding: 20,
     backgroundColor: '#fff',
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 10,
     elevation: 8,
-    marginTop: 4,
+    marginTop: 3,
   },  
   welcomeText: {
     fontSize: 26,
