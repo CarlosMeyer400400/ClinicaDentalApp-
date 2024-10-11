@@ -39,6 +39,17 @@ const TabNavigator = () => {
 
           return <Icon name={iconName} size={size} color={color} />;
         },
+        tabBarStyle: {
+          backgroundColor: '#283e51', 
+          borderTopWidth: 0,
+          height: 70, 
+          paddingBottom: 10, 
+        },
+        tabBarActiveTintColor: '#ffffff',
+        tabBarInactiveTintColor: '#a4c2d6', 
+        tabBarLabelStyle: {
+          fontSize: 14, 
+        },
       })}
     >
       <Tab.Screen name="Historial" component={Historial} options={{ headerShown: false }} />
@@ -68,7 +79,16 @@ const HeaderMenu = ({ navigation }) => {
       <MenuItem onPress={() => { hideMenu(); navigation.navigate('QuienesSomos'); }}>Quienes Somos</MenuItem>
       <MenuItem onPress={() => { hideMenu(); navigation.navigate('AvisoPrivacidad'); }}>Privacidad</MenuItem>
       <MenuDivider />
-    </Menu>
+      <MenuItem 
+          onPress={() => { 
+            hideMenu();
+            navigation.replace('Login'); 
+          }}
+        >
+          <Icon name="sign-out" size={16} color="#000" style={{ marginRight: 10 }} /> 
+          Cerrar sesión
+        </MenuItem>
+      </Menu>
     </View>
   );
 };
@@ -94,7 +114,7 @@ const App = () => {
                 <TouchableOpacity style={{ marginLeft: 15 }} onPress={() => navigation.navigate('Home')}>
                   <Image
                     source={require('./assets/logoblanco.png')} 
-                    style={{ width: 80, height: 80 }} 
+                    style={{ width: 95, height: 80 }} 
                     resizeMode="contain"
                   />
                 </TouchableOpacity>
@@ -111,12 +131,74 @@ const App = () => {
               },
             })}
           />
-            
 
-          <Stack.Screen name="Agendar" component={Agendar} />
-          <Stack.Screen name="Editar Perfil" component={EditarPerfil} />
-          <Stack.Screen name="QuienesSomos" component={QuienesSomos} />
-          <Stack.Screen name="AvisoPrivacidad" component={AvisoPrivacidad} />
+<Stack.Screen 
+            name="Agendar" 
+            component={Agendar} 
+            options={{
+              headerTitle: 'Agendar',
+              headerTitleStyle: {
+                color: '#ffffff',
+              },
+              headerStyle: {
+                backgroundColor: '#283e51', 
+                elevation: 0,
+                shadowOpacity: 0,
+              },
+              headerTintColor: '#ffffff', 
+            }}
+          />
+
+          <Stack.Screen 
+            name="Editar Perfil" 
+            component={EditarPerfil} 
+            options={{
+              headerTitle: 'Editar perfil',
+              headerTitleStyle: {
+                color: '#ffffff',
+              },
+              headerStyle: {
+                backgroundColor: '#283e51', 
+                elevation: 0,
+                shadowOpacity: 0,
+              },
+              headerTintColor: '#ffffff', 
+            }}
+          />
+  
+          <Stack.Screen
+            name="QuienesSomos"
+            component={QuienesSomos}
+            options={{
+              title: 'Quienes Somos',
+              headerTitleStyle: {
+                color: '#ffffff',
+              },
+              headerStyle: {
+                backgroundColor: '#283e51', // Main color for header
+                elevation: 0,
+                shadowOpacity: 0,
+              },
+              headerTintColor: '#ffffff', // White color for back button
+            }}
+          />
+
+          <Stack.Screen
+            name="AvisoPrivacidad"
+            component={AvisoPrivacidad}
+            options={{
+              title: 'Aviso de Privacidad',
+              headerTitleStyle: {
+                color: '#ffffff',
+              },
+              headerStyle: {
+                backgroundColor: '#283e51', 
+                elevation: 0,
+                shadowOpacity: 0,
+              },
+              headerTintColor: '#ffffff', 
+            }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </StripeProvider>
