@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Button, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getDataUser } from '../services/LoginService'; 
+import { getDataUser } from '../services/LoginService';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Perfil = ({ navigation }) => {
   const [userData, setUserData] = useState(null);
@@ -9,10 +10,9 @@ const Perfil = ({ navigation }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Función para obtener el ID del usuario desde AsyncStorage y luego los datos del usuario desde la API
     const fetchUserData = async () => {
       try {
-        const id = await AsyncStorage.getItem('token'); // Suponiendo que el token es el ID del usuario
+        const id = await AsyncStorage.getItem('token');
         if (id) {
           const data = await getDataUser(id);
           setUserData(data);
@@ -44,53 +44,94 @@ const Perfil = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Perfil</Text>
+      <Text style={styles.headerText}>Perfil</Text>
+      <View style={styles.profileHeader}>
+        <TouchableOpacity style={styles.editButton} onPress={() => navigation.navigate('Editar Perfil')}>
+          <Icon name="pencil" size={16} color="#1a73e8" />
+          <Text style={styles.editText}> Editar Perfil</Text>
+        </TouchableOpacity>
+      </View>
 
       {userData && (
-        <View style={styles.profileContainer}>
-          <Text style={styles.infoLabel}>Nombre: <Text style={styles.infoText}>{userData.nombre}</Text></Text>
-          <Text style={styles.infoLabel}>Apellido Paterno: <Text style={styles.infoText}>{userData.apellidop}</Text></Text>
-          <Text style={styles.infoLabel}>Apellido Materno: <Text style={styles.infoText}>{userData.apellidom}</Text></Text>
-          <Text style={styles.infoLabel}>Fecha de Nacimiento: <Text style={styles.infoText}>{userData.fecha}</Text></Text>
-          <Text style={styles.infoLabel}>Sexo: <Text style={styles.infoText}>{userData.sexo}</Text></Text>
-          <Text style={styles.infoLabel}>Telefono: <Text style={styles.infoText}>{userData.telefono}</Text></Text>
-          <Text style={styles.infoLabel}>Nombre de Usuario: <Text style={styles.infoText}>{userData.nombreu}</Text></Text>
-          <Text style={styles.infoLabel}>Correo Electrónico: <Text style={styles.infoText}>{userData.email}</Text></Text>
+        <View style={styles.infoContainer}>
+          <InfoRow label="Nombre" value={userData.nombre} />
+          <InfoRow label="Apellido Paterno" value={userData.apellidop} />
+          <InfoRow label="Apellido Materno" value={userData.apellidom} />
+          <InfoRow label="Fecha de Nacimiento" value={userData.fecha} />
+          <InfoRow label="Sexo" value={userData.sexo} />
+          <InfoRow label="Teléfono" value={userData.telefono} />
+          <InfoRow label="Nombre de Usuario" value={userData.nombreu} />
+          <InfoRow label="Correo Electrónico" value={userData.email} />
         </View>
       )}
-
-      <Button title="Editar Perfil" onPress={() => navigation.navigate('Editar Perfil')} color="#007BFF" />
     </View>
   );
 };
 
+const InfoRow = ({ label, value }) => (
+  <View style={styles.infoRow}>
+    <Text style={styles.label}>{label}</Text>
+    <Text style={styles.value}>{value}</Text>
+  </View>
+);
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     padding: 20,
-    backgroundColor: '#E3F2FD',
+    backgroundColor: '#f9f9f9',
   },
-  title: {
-    fontSize: 28,
+  headerText: {
+    fontSize: 30,
     fontWeight: 'bold',
+    color: '#1a73e8',
     textAlign: 'center',
     marginBottom: 20,
-    color: '#0D47A1',
   },
-  profileContainer: {
+  profileHeader: {
+    alignItems: 'flex-end',
     marginBottom: 20,
   },
-  infoLabel: {
-    fontSize: 18,
-    color: '#0D47A1',
-    marginBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#90CAF9',
-    paddingBottom: 5,
+  editButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderColor: '#1a73e8',
+    borderWidth: 1,
+    borderRadius: 20,
+    paddingHorizontal: 15,
+    paddingVertical: 5,
   },
-  infoText: {
+  editText: {
+    color: '#1a73e8',
     fontWeight: 'bold',
+    marginLeft: 5,
+  },
+  infoContainer: {
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    padding: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 3,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  },
+  label: {
+    fontSize: 16,
+    color: '#333',
+    fontWeight: '500',
+  },
+  value: {
+    fontSize: 16,
+    color: '#1a73e8',
+    fontWeight: '500',
   },
   errorText: {
     color: 'red',
