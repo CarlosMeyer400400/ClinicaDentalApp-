@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Button, ActivityIndicator, TextInput, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Button, ActivityIndicator, TextInput, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { updateUser, getDataUser } from '../services/LoginService';
+import Icon from 'react-native-vector-icons/FontAwesome'; // Para el ícono
 
 const EditarPerfil = ({ navigation }) => {
   const [dataUser, setDataUser] = useState({});
@@ -57,6 +58,11 @@ const EditarPerfil = ({ navigation }) => {
   };
 
   const handleUpdate = async () => {
+    if (!nombre || !apellidop || !apellidom || !email || !sexo || !fecha || !telefono || !nombreu) {
+      Alert.alert('Error', 'Todos los campos son requeridos.');
+      return;
+    }
+    
     const ageError = validateAge(fecha);
     if (ageError) {
       Alert.alert('Error', ageError);
@@ -75,7 +81,17 @@ const EditarPerfil = ({ navigation }) => {
         telefono,
         nombreu,
       });
-      Alert.alert('Éxito', 'Datos actualizados correctamente');
+      Alert.alert(
+        '¡Éxito!',
+        'Los datos han sido actualizados correctamente.',
+        [
+          {
+            text: 'Aceptar',
+            onPress: () => navigation.navigate('Perfil'), // Redirige al perfil
+          },
+        ],
+        { cancelable: false }
+      );
     } catch (err) {
       console.error('Error actualizando usuario', err);
       Alert.alert('Error', 'Error actualizando usuario. Inténtalo de nuevo más tarde.');
@@ -93,91 +109,126 @@ const EditarPerfil = ({ navigation }) => {
         <Text style={styles.error}>{error}</Text>
       ) : (
         <>
-          <TextInput
-            style={styles.input}
-            placeholder="Nombre"
-            value={nombre}
-            onChangeText={setNombre}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Apellido Paterno"
-            value={apellidop}
-            onChangeText={setApellidop}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Apellido Materno"
-            value={apellidom}
-            onChangeText={setApellidom}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Sexo"
-            value={sexo}
-            onChangeText={setSexo}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Fecha de Nacimiento"
-            value={fecha}
-            onChangeText={setFecha}
-            keyboardType="datetime"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Teléfono"
-            value={telefono}
-            onChangeText={setTelefono}
-            keyboardType="phone-pad"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Nombre de Usuario"
-            value={nombreu}
-            onChangeText={setNombreu}
-          />
-          <Button title="Actualizar Datos" onPress={handleUpdate} color="#3C8C36" />
-          <View style={styles.separator} />
-          <Button title="Volver al Inicio" onPress={() => navigation.navigate('Home')} color="#007BFF" />
+          <InputField label="Nombre" value={nombre} onChangeText={setNombre} />
+          <InputField label="Apellido Paterno" value={apellidop} onChangeText={setApellidop} />
+          <InputField label="Apellido Materno" value={apellidom} onChangeText={setApellidom} />
+          <InputField label="Email" value={email} onChangeText={setEmail} keyboardType="email-address" />
+          <InputField label="Sexo" value={sexo} onChangeText={setSexo} />
+          <InputField label="Fecha de Nacimiento" value={fecha} onChangeText={setFecha} keyboardType="datetime" />
+          <InputField label="Teléfono" value={telefono} onChangeText={setTelefono} keyboardType="phone-pad" />
+          <InputField label="Nombre de Usuario" value={nombreu} onChangeText={setNombreu} />
+          {/* Botón personalizado para Actualizar Datos */}
+          <TouchableOpacity style={styles.updateButton} onPress={handleUpdate}>
+            <Text style={styles.buttonText}>Actualizar Datos</Text>
+          </TouchableOpacity>
+
+          {/* Botón solo con ícono de Home */}
+          <TouchableOpacity style={styles.homeIconButton} onPress={() => navigation.navigate('Home')}>
+            <Icon name="home" size={40} color="#O492C2" />
+          </TouchableOpacity>
+
         </>
       )}
     </View>
   );
 };
 
+const InputField = ({ label, value, onChangeText, keyboardType = 'default' }) => (
+  <View style={styles.inputContainer}>
+    <Text style={styles.inputLabel}>{label}</Text>
+    <TextInput
+      style={styles.input}
+      value={value}
+      onChangeText={onChangeText}
+      keyboardType={keyboardType}
+    />
+  </View>
+);
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    justifyContent: 'center',
+    backgroundColor: '#f5f5f5',
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
     textAlign: 'center',
+    marginBottom: 30,
+    color: '#333',
+  },
+  inputContainer: {
+    marginBottom: 25,
+    borderBottomWidth: 1,
+    borderColor: '#dcdcdc',
+    paddingVertical: 5,
+    borderRadius: 4,
+    backgroundColor: '#ffffff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  inputLabel: {
+    fontSize: 12,
+    color: '#888',
+    paddingHorizontal: 10,
+    marginBottom: -15,
+    backgroundColor: '#ffffff',
+    position: 'absolute',
+    top: -10,
+    left: 10,
+    zIndex: 1,
   },
   input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 12,
-    paddingHorizontal: 10,
+    height: 35,
+    fontSize: 16,
+    paddingLeft: 10,
+    color: '#333',
+    borderBottomWidth: 0,
   },
-  error: {
-    color: 'red',
-    marginBottom: 12,
+  updateButton: {
+    backgroundColor: '#59788E',
+    paddingVertical: 12,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
-  separator: {
-    height: 20, // Ajusta la altura según lo que necesites
+  homeButton: {
+    flexDirection: 'row',
+    backgroundColor: '#007BFF',
+    paddingVertical: 12,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+    marginLeft: 5, // Espacio entre el ícono y el texto
+  },
+  icon: {
+    marginRight: 5,
+  },
+  homeIconButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 25,
+  },  
 });
 
 export default EditarPerfil;
