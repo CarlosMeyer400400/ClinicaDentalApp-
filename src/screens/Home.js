@@ -51,7 +51,7 @@ const Home = ({ navigation }) => {
             />
             <Text style={styles.serviceDescription}>{item.descripcion}</Text>
 
-            <Button title="Agendar" onPress={() => navigation.navigate('Agendar')} color="#007BFF" />
+            <Button title="Agendar" onPress={() => navigation.navigate('Agendar')} color="#59788E" />
 
           </View>
         )}
@@ -100,8 +100,8 @@ const styles = StyleSheet.create({
     color: '#555',
   },
   serviceImage: {
-    width: '100%', // Tamaño de la imagen
-    height: 150, // Puedes ajustar este valor según tus necesidades
+    width: '100%', 
+    height: 150, 
     resizeMode: 'cover',
     borderRadius: 8,
     marginBottom: 10,
