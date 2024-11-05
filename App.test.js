@@ -21,4 +21,53 @@ describe('Pruebas de App y Login', () => {
             expect(getByText('Bienvenido')).toBeTruthy();
         });
     });
+
+    test('Muestra un mensaje de error si el correo o la contraseña están vacíos', async () => {
+        const { getByText, getByPlaceholderText } = render(<Login />);
+        const loginButton = getByText('Iniciar Sesión');
+        
+        fireEvent.changeText(getByPlaceholderText('Correo electrónico'), '');
+        fireEvent.changeText(getByPlaceholderText('Contraseña'), '');
+        fireEvent.press(loginButton);
+
+        await waitFor(() => {
+            expect(getByText('Por favor, ingrese correo electrónico y contraseña.')).toBeTruthy();
+        });
+    });
+
+
+    test('Oculta el modal de error al presionar "Cerrar"', async () => {
+        const { getByText } = render(<Login />);
+        
+        // Forzar un error para mostrar el modal de error
+        fireEvent.press(getByText('Iniciar Sesión'));
+
+        await waitFor(() => {
+            expect(getByText('Cerrar')).toBeTruthy();
+        });
+
+        // Cerrar el modal de error
+        fireEvent.press(getByText('Cerrar'));
+        
+        await waitFor(() => {
+            expect(getByText('Iniciar Sesión')).toBeTruthy();
+        });
+    });
+
+    test('Permite alternar la visibilidad de la contraseña', async () => {
+        const { getByPlaceholderText, getByTestId } = render(<Login />);
+        
+        const passwordInput = getByPlaceholderText('Contraseña');
+        const eyeIcon = getByTestId('eyeIcon');
+    
+        // La contraseña inicialmente debe estar oculta
+        expect(passwordInput.props.secureTextEntry).toBe(true);
+    
+        // Cambiar la visibilidad de la contraseña
+        fireEvent.press(eyeIcon);
+        
+        await waitFor(() => {
+            expect(passwordInput.props.secureTextEntry).toBe(false);
+        });
+    });
 });
