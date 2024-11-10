@@ -18,6 +18,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Instalación de dependencias de Node.js
+      - name: Instalar dependencias
+        run: npm ci
+        
       # Checkout del código fuente
       - name: Checkout código
         uses: actions/checkout@v4.2.1
@@ -28,9 +32,7 @@ jobs:
         with:
           node-version: '18.X'
 
-      # Instalación de dependencias de Node.js
-      - name: Instalar dependencias
-        run: npm ci
+
 
 
   test:
