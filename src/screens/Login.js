@@ -80,9 +80,15 @@ const Login = ({ navigation }) => {
               secureTextEntry={!showPassword}
               style={styles.passwordInput}
             />
+
             <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeIconContainer} testID="eyeIcon">
   <Icon name={showPassword ? "eye" : "eye-slash"} size={20} color="#666" />
 </TouchableOpacity>
+
+
+            <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeIconContainer}>
+              <Icon name={showPassword ? "eye" : "eye-slash"} size={20} color="#666" />
+            </TouchableOpacity>
 
           </View>
 

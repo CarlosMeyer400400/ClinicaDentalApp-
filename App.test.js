@@ -22,6 +22,7 @@ describe('Pruebas de App y Login', () => {
         });
     });
 
+
     test('Muestra un mensaje de error si el correo o la contraseña están vacíos', async () => {
         const { getByText, getByPlaceholderText } = render(<Login />);
         const loginButton = getByText('Iniciar Sesión');
@@ -70,4 +71,5 @@ describe('Pruebas de App y Login', () => {
             expect(passwordInput.props.secureTextEntry).toBe(false);
         });
     });
+
 });

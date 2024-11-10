@@ -12,6 +12,7 @@ on:
       - main
   workflow_dispatch:
 
+
 # Definición de los trabajos (jobs)
 jobs:
   build:
@@ -28,9 +29,15 @@ jobs:
         with:
           node-version: '18.X'
 
+
       # Instalación de dependencias de Node.js
       - name: Instalar dependencias
         run: npm ci
+
+
+      # Instalación de dependencias de Node.js con legacy-peer-deps
+      - name: Instalar dependencias
+        run: npm ci --legacy-peer-deps
 
 
   test:
@@ -48,9 +55,15 @@ jobs:
         with:
           node-version: '18.X'
 
+
       # Instalación de dependencias
       - name: Instalar dependencias
         run: npm ci
+
+      # Instalación de dependencias con legacy-peer-deps
+      - name: Instalar dependencias
+        run: npm ci --legacy-peer-deps
+
 
       # Ejecutar pruebas unitarias
       - name: Ejecutar pruebas
@@ -67,4 +80,3 @@ jobs:
       # Construcción y despliegue (ejemplo de despliegue en GitHub Pages)
       - name: Desplegar en GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
- 
