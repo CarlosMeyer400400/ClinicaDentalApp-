@@ -26,9 +26,9 @@ jobs:
         with:
           node-version: '18.X'
 
-      # Instalación de dependencias de Node.js
+      # Instalación de dependencias de Node.js con legacy-peer-deps
       - name: Instalar dependencias
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
   test:
     runs-on: ubuntu-latest
@@ -45,9 +45,9 @@ jobs:
         with:
           node-version: '18.X'
 
-      # Instalación de dependencias
+      # Instalación de dependencias con legacy-peer-deps
       - name: Instalar dependencias
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
       # Ejecutar pruebas unitarias
       - name: Ejecutar pruebas
