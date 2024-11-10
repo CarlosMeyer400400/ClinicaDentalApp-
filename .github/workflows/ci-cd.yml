@@ -1,6 +1,5 @@
 name: PWA CI/CD Workflow Aplicacion Movil
 
-# Configuración de los desencadenadores
 on:
   push:
     branches:
@@ -12,16 +11,11 @@ on:
       - main
   workflow_dispatch:
 
-# Definición de los trabajos (jobs)
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # Instalación de dependencias de Node.js
-      - name: Instalar dependencias
-        run: npm ci
-        
       # Checkout del código fuente
       - name: Checkout código
         uses: actions/checkout@v4.2.1
@@ -32,8 +26,9 @@ jobs:
         with:
           node-version: '18.X'
 
-
-
+      # Instalación de dependencias de Node.js
+      - name: Instalar dependencias
+        run: npm ci
 
   test:
     runs-on: ubuntu-latest
@@ -69,4 +64,3 @@ jobs:
       # Construcción y despliegue (ejemplo de despliegue en GitHub Pages)
       - name: Desplegar en GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
-
