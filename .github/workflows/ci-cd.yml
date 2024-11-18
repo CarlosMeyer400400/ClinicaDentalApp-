@@ -36,3 +36,5 @@ jobs:
           eas build --platform android --profile preview
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}  # Token de autenticación de Expo
+
+          
