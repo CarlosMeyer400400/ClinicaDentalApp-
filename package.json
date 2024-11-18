@@ -47,13 +47,8 @@
     "@testing-library/jest-native": "^5.4.3",
     "@testing-library/react-native": "^12.8.0",
     "babel-jest": "^29.7.0",
-    "jest": "^29.7.0",
-    "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
     "@babel/preset-react": "^7.25.9",
-    "@testing-library/jest-native": "^5.4.3",
-    "@testing-library/react-native": "^12.8.1",
-    "babel-jest": "^29.7.0",
     "jest": "^29.7.0",
     "metro-react-native-babel-preset": "^0.77.0"
   },
