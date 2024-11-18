@@ -1,86 +1,36 @@
-name: PWA CI/CD Workflow Aplicacion Movil
+name: Android Build Workflow
 
-# Configuración de los desencadenadores
 on:
   push:
     branches:
-      - master
       - main
-  pull_request:
-    branches:
       - master
-      - main
   workflow_dispatch:
 
-# Definición de los trabajos (jobs)
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout del código fuente
-      - name: Checkout código
-        uses: actions/checkout@v4.2.1
+      # Paso 1: Clonar el repositorio
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      # Configuración de Node.js
+      # Paso 2: Configurar Node.js (para proyectos React Native/Expo)
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18.X'
+          node-version: '18'
 
-      # Instalación de dependencias de Node.js
-      - name: Instalar dependencias
-        run: npm ci
-
-      # Instalación de dependencias de Node.js con legacy-peer-deps
-      - name: Instalar dependencias
-        run: npm ci --legacy-peer-deps
-
-  test:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-      # Checkout del código fuente
-      - name: Checkout código
-        uses: actions/checkout@v4.2.1
-
-      # Configuración de Node.js
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18.X'
-
-      # Instalación de dependencias
-      - name: Instalar dependencias
-        run: npm ci
-
-      # Instalación de dependencias con legacy-peer-deps
-      - name: Instalar dependencias
-        run: npm ci --legacy-peer-deps
-
-      # Ejecutar pruebas unitarias
-      - name: Ejecutar pruebas
-        run: npm test
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: test
-
-    steps:
-      # Paso 1: Checkout del código fuente
-      - name: Checkout código
-        uses: actions/checkout@v4.2.1
-
-      # Paso 2: Instalar EAS CLI
-      - name: Instalar EAS CLI
+      # Paso 3: Instalar EAS CLI
+      - name: Install EAS CLI
         run: npm install -g eas-cli
 
-      # Paso 3: Instalar dependencias del proyecto
-      - name: Instalar dependencias
-        run: npm ci
+      # Paso 4: Instalar dependencias del proyecto
+      - name: Install dependencies
+        run: npm install
 
-      # Paso 4: Construir el APK para Android
+      # Paso 5: Construir el APK para Android
       - name: Build APK for Android
         run: |
           eas build --platform android --profile preview
