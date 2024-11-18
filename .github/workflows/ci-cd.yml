@@ -12,7 +12,6 @@ on:
       - main
   workflow_dispatch:
 
-
 # Definición de los trabajos (jobs)
 jobs:
   build:
@@ -29,16 +28,13 @@ jobs:
         with:
           node-version: '18.X'
 
-
       # Instalación de dependencias de Node.js
       - name: Instalar dependencias
         run: npm ci
 
-
       # Instalación de dependencias de Node.js con legacy-peer-deps
       - name: Instalar dependencias
         run: npm ci --legacy-peer-deps
-
 
   test:
     runs-on: ubuntu-latest
@@ -55,7 +51,6 @@ jobs:
         with:
           node-version: '18.X'
 
-
       # Instalación de dependencias
       - name: Instalar dependencias
         run: npm ci
@@ -63,7 +58,6 @@ jobs:
       # Instalación de dependencias con legacy-peer-deps
       - name: Instalar dependencias
         run: npm ci --legacy-peer-deps
-
 
       # Ejecutar pruebas unitarias
       - name: Ejecutar pruebas
@@ -74,9 +68,21 @@ jobs:
     needs: test
 
     steps:
+      # Paso 1: Checkout del código fuente
       - name: Checkout código
         uses: actions/checkout@v4.2.1
 
-      # Construcción y despliegue (ejemplo de despliegue en GitHub Pages)
-      - name: Desplegar en GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      # Paso 2: Instalar EAS CLI
+      - name: Instalar EAS CLI
+        run: npm install -g eas-cli
+
+      # Paso 3: Instalar dependencias del proyecto
+      - name: Instalar dependencias
+        run: npm ci
+
+      # Paso 4: Construir el APK para Android
+      - name: Build APK for Android
+        run: |
+          eas build --platform android --profile preview
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}  # Token de autenticación de Expo
